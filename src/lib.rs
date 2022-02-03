@@ -4,7 +4,11 @@
 //!
 //! This crate is inspired by <https://github.com/FedericoStra/Sorting>.
 
+/// An algorithm for sorting.
+///
+/// This trait identifies algorithms suitable for sorting slices.
 pub trait SortingAlgorithm {
+    /// Sorts the given slice.
     fn sort<T: Ord>(slice: &mut [T]);
 }
 
@@ -24,6 +28,11 @@ impl SortingAlgorithm for Timsort {
     fn sort<T: Ord>(slice: &mut [T]) {
         slice.sort();
     }
+}
+
+/// Sorts the given slice using the [`SortingAlgorithm`] `SA`.
+pub fn sort<T: Ord, SA: SortingAlgorithm>(slice: &mut [T]) {
+    SA::sort(slice);
 }
 
 /// Checks if the elements of the slice are sorted.
@@ -57,6 +66,13 @@ mod tests {
     fn pdqsort() {
         let mut v = [1, 2, 3, 6, 3, 1, 3, -4, 6, -2, 3, 0, 5, 3, 0, 12];
         PDQsort::sort(&mut v);
+        assert!(is_sorted(&v));
+    }
+
+    #[test]
+    fn it_sorts() {
+        let mut v = [1, 2, 3, 6, 3, 1, 3, -4, 6, -2, 3, 0, 5, 3, 0, 12];
+        sort::<_, Timsort>(&mut v);
         assert!(is_sorted(&v));
     }
 }
