@@ -30,6 +30,21 @@ impl SortingAlgorithm for Timsort {
     }
 }
 
+/// <https://en.wikipedia.org/wiki/Insertion_sort>
+pub struct InsertionSort;
+
+impl SortingAlgorithm for InsertionSort {
+    fn sort<T: Ord>(&self, slice: &mut [T]) {
+        for i in 1..slice.len() {
+            let mut j = i;
+            while j > 0 && slice[j - 1] > slice[j] {
+                slice.swap(j - 1, j);
+                j -= 1;
+            }
+        }
+    }
+}
+
 /// Sorts the given slice using a specific [`SortingAlgorithm`].
 pub fn sort<T: Ord, A: SortingAlgorithm>(slice: &mut [T], algo: &A) {
     algo.sort(slice);
@@ -66,6 +81,13 @@ mod tests {
     fn pdqsort() {
         let mut v = [1, 2, 3, 6, 3, 1, 3, -4, 6, -2, 3, 0, 5, 3, 0, 12];
         PDQsort.sort(&mut v);
+        assert!(is_sorted(&v));
+    }
+
+    #[test]
+    fn insertion_sort() {
+        let mut v = [1, 2, 3, 6, 3, 1, 3, -4, 6, -2, 3, 0, 5, 3, 0, 12];
+        InsertionSort.sort(&mut v);
         assert!(is_sorted(&v));
     }
 
